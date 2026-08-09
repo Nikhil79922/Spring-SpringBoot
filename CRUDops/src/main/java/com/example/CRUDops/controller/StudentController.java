@@ -25,6 +25,7 @@ public class StudentController {
     //Create student
     @PostMapping("/create")
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        student.setDeleted(false);
         System.out.println("Creating student " + student);
         Student createdStudentDetails = studentService.create(student);
         System.out.println("Exiting student Repository create");
@@ -62,6 +63,7 @@ public class StudentController {
     //Update Student
     @PutMapping("/update/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
+        studentDetails.setDeleted(false);
         Optional<Student> updatedStudentDetails = studentService.updateStudent(id, studentDetails);
 
         if (updatedStudentDetails.isPresent()) {
@@ -80,5 +82,16 @@ public class StudentController {
             return ResponseEntity.ok("Record deleted successfully");
         };
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Record not found");
+    }
+
+    //Soft Delete Ops
+    @PatchMapping("/delete-soft/{id}")
+    public ResponseEntity<String> softDeleteStudent(@PathVariable Long id) {
+        boolean deletedStudentDetails = studentService.softDeleteStudent(id);
+
+        if (deletedStudentDetails) {
+            return ResponseEntity.ok("Record soft deleted successfully");
+        };
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Record not found or Already deleted");
     }
 }

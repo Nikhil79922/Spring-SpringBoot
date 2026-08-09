@@ -14,7 +14,7 @@ public class CruDopsApplication {
 	 * */
 	public static void main(String[] args) {
 		SpringApplication.run(CruDopsApplication.class, args);
-		System.out.println("Hello world");
+		System.out.println("Server Started At port 8080");
 	}
 
 }

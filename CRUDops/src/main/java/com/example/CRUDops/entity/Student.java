@@ -1,18 +1,22 @@
 package com.example.CRUDops.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class Student {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String email;
     private int age;
     private int rollNo;
     private String subject;
+    private boolean deleted;
 
     public long getId() {
         return id;
@@ -60,6 +64,14 @@ public class Student {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override
