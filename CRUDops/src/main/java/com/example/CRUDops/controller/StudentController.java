@@ -84,7 +84,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Record not found");
     }
 
-    //Soft Delete Ops
+    //Soft Delete student
     @PatchMapping("/delete-soft/{id}")
     public ResponseEntity<String> softDeleteStudent(@PathVariable Long id) {
         boolean deletedStudentDetails = studentService.softDeleteStudent(id);
