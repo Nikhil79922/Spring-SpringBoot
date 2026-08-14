@@ -1,7 +1,10 @@
 package com.example.CRUDops.controller;
 
+import com.example.CRUDops.dto.StudentRequestDTO;
+import com.example.CRUDops.dto.StudentResponseDTO;
 import com.example.CRUDops.entity.Student;
 import com.example.CRUDops.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +26,10 @@ public class StudentController {
     }
 
     //Create student
-    @PostMapping("/create")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        student.setDeleted(false);
+    @PostMapping
+    public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody StudentRequestDTO student) {
         System.out.println("Creating student " + student);
-        Student createdStudentDetails = studentService.create(student);
+        StudentResponseDTO createdStudentDetails = studentService.create(student);
         System.out.println("Exiting student Repository create");
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -35,7 +37,7 @@ public class StudentController {
     }
 
     //Read one student
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Student> getOneStudent(@PathVariable long id) {
         Optional<Student> getOneStudentDetails = studentService.getOneStudent(id);
 
@@ -48,7 +50,7 @@ public class StudentController {
     }
 
     //Read All student
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<List<Student>> getAllStudent() {
         List<Student> getAllStudentDetails = studentService.getAllStudent();
 
@@ -61,7 +63,7 @@ public class StudentController {
     }
 
     //Update Student
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
         studentDetails.setDeleted(false);
         Optional<Student> updatedStudentDetails = studentService.updateStudent(id, studentDetails);
@@ -74,7 +76,7 @@ public class StudentController {
     }
 
     //Delete Ops
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
         boolean deletedStudentDetails = studentService.deleteStudent(id);
 

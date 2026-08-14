@@ -1,30 +1,17 @@
-package com.example.CRUDops.entity;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+package com.example.CRUDops.dto;
 
 import java.time.LocalDateTime;
 
-@Entity
-public class Student {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class StudentResponseDTO {
     private long id;
     private String name;
     private String email;
     private int age;
     private int rollNo;
     private String subject;
-    private boolean deleted;
+    private String message;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    public boolean isDeleted() {
-        return deleted;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -42,8 +29,20 @@ public class Student {
         this.updatedAt = updatedAt;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -86,27 +85,4 @@ public class Student {
         this.subject = subject;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", age=" + age +
-                ", rollNo=" + rollNo +
-                ", subject='" + subject + '\'' +
-                '}';
-    }
 }
