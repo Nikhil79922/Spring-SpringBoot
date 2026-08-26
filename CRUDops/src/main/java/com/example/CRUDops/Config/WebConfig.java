@@ -15,7 +15,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(LoggingInterceptor);
+        registry.addInterceptor(LoggingInterceptor)
+                .addPathPatterns("api/**")
+                .excludePathPatterns("/api/login")
+                .order(1);  // used to define the sequential follow
     }
 
 }
