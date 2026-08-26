@@ -16,14 +16,28 @@ public class LoggingInterceptors implements HandlerInterceptor {
                             Object handler)
             throws Exception {
 
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-        String controllerName = handlerMethod.getBeanType().getSimpleName();
-        String methodName = handlerMethod.getMethod().getName();
-        System.out.println("LoggingInterceptors preHandle...");
-        System.out.println("controllerName: " + controllerName);
-        System.out.println("methodName: " + methodName);
-        return true;
+//        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        if(handler instanceof HandlerMethod handlerMethod) {
+            System.out.println("Handler Method Called....");
+            System.out.println("request method:"+ request.getMethod());
+            System.out.println("request URI:"+ request.getRequestURI());
+            System.out.println("request URL:"+ request.getRequestURL());
+            System.out.println("request IP" + request.getRemoteAddr());
+            System.out.println("request IP" + request.getRemoteHost());
+            System.out.println("request IP" + request.getLocalAddr());
+            System.out.println("request IP" + request.getLocalName());
+            System.out.println("request IP" + request.getLocalPort());
+            System.out.println("request params" + request.getParameterMap().toString());
 
+
+            String controllerName = handlerMethod.getBeanType().getSimpleName();
+            String methodName = handlerMethod.getMethod().getName();
+            System.out.println("LoggingInterceptors preHandle...");
+            System.out.println("controllerName: " + controllerName);
+            System.out.println("methodName: " + methodName);
+            return true;
+        }
+        return false;
     }
 
 @Override
