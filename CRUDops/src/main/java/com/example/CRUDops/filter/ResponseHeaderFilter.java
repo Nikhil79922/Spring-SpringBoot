@@ -7,37 +7,24 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.UUID;
 
 //@Component
-//@Order(1)
-public class LoggingFilter implements Filter {
-//
-//    @Override
-//    public void init(FilterConfig filterConfig) throws ServletException {
-//        Filter.super.init(filterConfig);
-//    }
-
+//@Order(3)
+public class ResponseHeaderFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain)
             throws IOException, ServletException {
-        System.out.println("Request Entered in Do Filter");
         HttpServletRequest req = (HttpServletRequest) request;
-        System.out.println("Request details : "+req.getRequestURL().toString() + " Request Method "+ req.getMethod());
 
+        HttpServletResponse res = (HttpServletResponse) response;
+
+        String random = UUID.randomUUID().toString();
+        res.setHeader("x-request-id", random);
 
         chain.doFilter(request, response);
 
-        System.out.println("Response Entered in Do Filter");
-        HttpServletResponse res = (HttpServletResponse) response;
-        System.out.println("Response details : "+res.getStatus());
-
-
     }
-//
-//    @Override
-//    public void destroy() {
-//        Filter.super.destroy();
-//    }
 }

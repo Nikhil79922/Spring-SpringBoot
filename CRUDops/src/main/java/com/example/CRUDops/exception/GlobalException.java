@@ -1,6 +1,5 @@
 package com.example.CRUDops.exception;
 
-import com.example.CRUDops.dto.DuplicateException;
 import com.example.CRUDops.dto.ExceptionValidationDTO;
 import com.example.CRUDops.dto.ValidationExceptionDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,5 +56,11 @@ public class GlobalException {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionValidationDTO> handleGenericException(Exception e , HttpServletRequest request) {
         return  new ResponseEntity<>(new ExceptionValidationDTO(false , "Something went wrong. Please try again later" , LocalDateTime.now() ,  HttpStatus.INTERNAL_SERVER_ERROR.value() , request.getRequestURI()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public static class DuplicateException extends RuntimeException {
+        public DuplicateException(String message) {
+            super(message);
+        }
     }
 }

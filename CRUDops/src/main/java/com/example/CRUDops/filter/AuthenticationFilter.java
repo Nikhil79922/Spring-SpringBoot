@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
-@Order(2)
+//@Component
+//@Order(2)
 public class AuthenticationFilter implements Filter {
 
     @Override
@@ -21,9 +21,16 @@ public class AuthenticationFilter implements Filter {
         String token = req.getHeader("token");
         System.out.println("Token: " + token);
         if ( token == null || !token.equals("12345")) {
+            res.setContentType("application/json");
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            res.getWriter().write("\n" +
+                    "{\n" +
+                    "    \"message\":\"Authentication is required\"\n" +
+                    "}");
             return;
         }
+
+
 
         chain.doFilter(request, response);
     }

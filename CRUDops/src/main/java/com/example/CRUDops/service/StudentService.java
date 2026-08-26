@@ -1,17 +1,15 @@
 package com.example.CRUDops.service;
 
-import com.example.CRUDops.dto.DuplicateException;
 import com.example.CRUDops.dto.StudentRequestDTO;
 import com.example.CRUDops.dto.StudentResponseDTO;
 import com.example.CRUDops.entity.Student;
+import com.example.CRUDops.exception.GlobalException;
 import com.example.CRUDops.exception.ResourceNotFoundException;
 import com.example.CRUDops.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -28,7 +26,7 @@ public class StudentService {
     public StudentResponseDTO create(StudentRequestDTO studentDTO) {
         boolean checkEmail = studentRepository.existsByEmail(studentDTO.getEmail());
         if (checkEmail) {
-            throw new DuplicateException("Email already exists");
+            throw new GlobalException.DuplicateException("Email already exists");
         }
         Student student = mapToEntity(studentDTO);
         Student studentRepoResponse = studentRepository.save(student);
