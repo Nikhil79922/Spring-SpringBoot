@@ -1,4 +1,4 @@
-package org.example.model;
+package com.example.springJDBCdemo.model;
 
 public class Student {
     private long id;

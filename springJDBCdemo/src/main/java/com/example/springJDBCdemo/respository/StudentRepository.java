@@ -1,33 +1,32 @@
-package org.example.respository;
+package com.example.springJDBCdemo.respository;
 
-import org.example.model.Student;
+
+
+import com.example.springJDBCdemo.model.Student;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 
+@Repository
 public class StudentRepository {
+
+    private JdbcTemplate jdbcTemplate;
+
+    public StudentRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void create() {
 
-        String url = "jdbc:postgresql://localhost:5433/JDBC_Demo";
-        String username = "postgres";
-        String password = "gasmonkey";
         String sql = """
+
 INSERT INTO students (name, email, age) VALUES (? ,? ,? )
 """;
-        try (  Connection connection = DriverManager.getConnection(url, username, password);  PreparedStatement statement = connection.prepareStatement(sql);
-                     ){
-            statement.setString(1, "Gasmonkey");
-            statement.setString(2, "gas@gmail.com");
-            statement.setInt(3, 30);
+        int result = jdbcTemplate.update(sql, "Nikhil" , "king@gmail.com" , 22);
 
-            int result = statement.executeUpdate();
-
-            if (result == 1) {
-                System.out.println("Student created successfully");
-            }
-        } catch (SQLException e) {
-            System.out.println("Database connection could not be established...");
-            e.printStackTrace();
+        if (result == 1) {
+            System.out.println("Student created successfully");
         }
     }
 
@@ -95,7 +94,7 @@ INSERT INTO students (name, email, age) VALUES (? ,? ,? )
 
             String sql = "SELECT id , name , email , age FROM students WHERE id = 3";
 
-            java.sql.ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery(sql);
             resultSet.next();
             Student student = mapToStudent(resultSet);
             System.out.println(student);
@@ -107,7 +106,7 @@ INSERT INTO students (name, email, age) VALUES (? ,? ,? )
         }
     }
 
-    private Student mapToStudent(java.sql.ResultSet resultSet) throws SQLException {
+    private Student mapToStudent(ResultSet resultSet) throws SQLException {
 
         Student student = new Student();
         student.setId(resultSet.getLong("id"));
