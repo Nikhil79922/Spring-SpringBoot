@@ -1,12 +1,11 @@
-package com.example.CRUDops.entity;
+package com.example.hibernateDemo.entity;
 
-import com.example.CRUDops.entity.attributes.BooleanToString;
-import com.example.CRUDops.entity.enums.StudentStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 public class Student {
@@ -15,64 +14,11 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    @Column(
-            name= "email",
-            unique = true,
-            nullable = false,
-            length = 100,
-            insertable = false,
-            updatable = false
-    )
     private String email;
     private int age;
     private int rollNo;
     private String subject;
     private boolean deleted;
-
-// For Hibernate Understanding...
-//
-//    @Enumerated(EnumType.STRING)
-//    private StudentStatus status;
-//    @Column(precision = 5 , scale=2)
-//    private BigDecimal percentage;
-//
-//    @Transient
-//    private String displayName;
-//
-//    @Convert(converter = BooleanToString.class)
-//    private Boolean isMonitor;
-//
-//    @Lob
-//    private String profileDescription;
-//
-//    @Embedded
-//    private Address currentAddress;
-//
-//
-//
-//    @Embedded
-//    @AttributeOverrides({
-//            @AttributeOverride(
-//                    name = "country",
-//                    column = @Column(name= "permanentCountry")
-//            ),
-//            @AttributeOverride(
-//                    name = "city",
-//                    column = @Column(name= "permanentCity")
-//            ),
-//    })
-//    private Address permanentAddress;
-//
-//    //Joins
-//    @ElementCollection
-//    @CollectionTable(
-//            name= "student_skills",
-//            joinColumns = @JoinColumn(name = "student_id")
-//    )
-//    private Set<String> skills;
-//
-//
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
