@@ -1,112 +1,39 @@
 package com.example.hibernateDemo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
+
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 
 @Entity
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
-    private String email;
-    private int age;
-    private int rollNo;
-    private String subject;
-    private boolean deleted;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
-    public boolean isDeleted() {
-        return deleted;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "dept_id",
+            nullable = false
+    )
+    private Department department;
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name= "profile_id",
+            nullable = false
+    )
+    private Profile2 profile;
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public int getRollNo() {
-        return rollNo;
-    }
-
-    public void setRollNo(int rollNo) {
-        this.rollNo = rollNo;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", age=" + age +
-                ", rollNo=" + rollNo +
-                ", subject='" + subject + '\'' +
-                '}';
-    }
 }

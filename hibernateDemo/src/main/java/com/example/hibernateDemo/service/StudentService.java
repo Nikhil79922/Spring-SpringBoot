@@ -1,14 +1,18 @@
 package com.example.hibernateDemo.service;
 
-import com.example.CRUDops.dto.StudentRequestDTO;
-import com.example.CRUDops.dto.StudentResponseDTO;
-import com.example.CRUDops.entity.Student;
-import com.example.CRUDops.exception.GlobalException;
-import com.example.CRUDops.exception.ResourceNotFoundException;
-import com.example.CRUDops.repository.StudentRepository;
+
+import com.example.hibernateDemo.entity.Department;
+import com.example.hibernateDemo.entity.Profile2;
+import com.example.hibernateDemo.entity.Student;
+import com.example.hibernateDemo.repository.DepartmentRepository;
+import com.example.hibernateDemo.repository.Profile2Repository;
+import com.example.hibernateDemo.repository.StudentRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,96 +22,74 @@ public class StudentService {
      * 2) Send request to repository to store the data in DB.
      * */
     private StudentRepository studentRepository;
+    private DepartmentRepository departmentRepository;
+    private Profile2Repository profile2Repository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(
+            StudentRepository studentRepository,
+            DepartmentRepository departmentRepository,
+            Profile2Repository profile2Repository
+    ) {
         this.studentRepository = studentRepository;
+        this.departmentRepository = departmentRepository;
+        this.profile2Repository = profile2Repository;
     }
 
-    public StudentResponseDTO create(StudentRequestDTO studentDTO) {
-        boolean checkEmail = studentRepository.existsByEmail(studentDTO.getEmail());
-        if (checkEmail) {
-            throw new GlobalException.DuplicateException("Email already exists");
-        }
-        Student student = mapToEntity(studentDTO);
-        Student studentRepoResponse = studentRepository.save(student);
-        return mapToDTO(studentRepoResponse);
-    }
+//    @Transactional
+//    public Student create(Long deptId, Student student) {
+//        Department department = departmentRepository.getByDepartmentId(deptId);
+//        student.setDepartment(department);
+//        department.getStudents().add(student);
+//        studentRepository.save(student);
+//        return student;
+//    }
 
-    public StudentResponseDTO getOneStudent(Long id) {
-        Student studentDetails =  studentRepository.findByIdAndDeletedIsFalse(id).orElseThrow(()-> new ResourceNotFoundException("Student not found with id: " + id));
-        return mapToDTO(studentDetails);
-    }
-
-    public List<StudentResponseDTO> getAllStudent() {
-        List<Student> studentsList = studentRepository.findByDeletedIsFalse();
-
-        if (studentsList.isEmpty()) {
-            throw new ResourceNotFoundException("Students not found");
-        }
-      return studentsList.stream().map(this::mapToDTO).toList();
-    }
-
-    public StudentResponseDTO updateStudent(Long id, StudentRequestDTO student) {
-        Student studentDetail = studentRepository.findByIdAndDeletedIsFalse(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Student not found with id: " + id));
-
-            Student updatedStudent = new Student();
-            updatedStudent.setId(id);
-            updatedStudent.setSubject(studentDetail.getSubject());
-            updatedStudent.setName(studentDetail.getName());
-            updatedStudent.setEmail(studentDetail.getEmail());
-            updatedStudent.setRollNo(studentDetail.getRollNo());
-            updatedStudent.setAge(studentDetail.getAge());
-            updatedStudent.setDeleted(studentDetail.getDeleted());
-
-             Student updatedDetails = studentRepository.save(updatedStudent);
-             return mapToDTO(updatedDetails);
-    }
-
-    public boolean deleteStudent(Long id) {
-        boolean exists = studentRepository.existsById(id);
-        if(!exists){
-            throw new ResourceNotFoundException("Students not found");
-        }
-         studentRepository.deleteById(id);
-        return true;
-    }
-
-    public boolean softDeleteStudent(Long id) {
-       Student studentDetails  = studentRepository.findByIdAndDeletedIsFalse(id).orElseThrow(()-> new ResourceNotFoundException("Student not found with id: " + id));
-
-        studentDetails.setDeleted(true);
-            studentRepository.save(studentDetails);
-            return true;
-    }
+//    @Transactional
+//    public Student createStudentAndDepartment(String deptName, Student student) {
+//        Department dept = new Department();
+//        dept.setName(deptName);
+//        dept.getStudents().add(student);
+//        student.setDepartment(dept);
+//        departmentRepository.save(dept);
+//        studentRepository.save(student);
+//        return student;
+//    }
 
 
-    //Helper methods
-    private Student mapToEntity(StudentRequestDTO studentDTO) {
-        Student student = new Student();
-        student.setSubject(studentDTO.getSubject());
-        student.setName(studentDTO.getName());
-        student.setEmail(studentDTO.getEmail());
-        student.setRollNo(studentDTO.getRollNo());
-        student.setAge(studentDTO.getAge());
-        student.setDeleted(false);
-        student.setCreatedAt(LocalDateTime.now());
-        student.setUpdatedAt(LocalDateTime.now());
+    @Transactional
+    public Student createStudentWithDeptAndProfile(Student student) {
+        Department department = new Department();
+        department.setName("CSE");
+
+        Profile2 profile = new Profile2();
+        profile.setBio("Hey Whatsup");
+
+        student.setProfile(profile);
+        student.setDepartment(department);
+        departmentRepository.save(department);
+        profile2Repository.save(profile);
+        studentRepository.save(student);
         return student;
     }
 
-    private StudentResponseDTO mapToDTO(Student student) {
-        StudentResponseDTO studentDTO = new StudentResponseDTO();
-        studentDTO.setId(student.getId());
-        studentDTO.setSubject(student.getSubject());
-        studentDTO.setName(student.getName());
-        studentDTO.setEmail(student.getEmail());
-        studentDTO.setRollNo(student.getRollNo());
-        studentDTO.setAge(student.getAge());
-        studentDTO.setMessage("Students details are stored successfully");
-        studentDTO.setCreatedAt(student.getCreatedAt());
-        studentDTO.setUpdatedAt(student.getUpdatedAt());
-        return studentDTO;
+    @Transactional
+        public Student findStudentById(Long studentId) {
+        Student s1 = studentRepository.findById(studentId);
+        return s1;
     }
+
+    @Transactional
+    public List<Student> findAll() {
+        List<Student> students = studentRepository.findAll();
+        for (Student student : students) {
+            System.out.println("No department query call");
+            student.getDepartment().getName();
+        }
+
+        System.out.println("Now the Profiles will be FEtched :::::::::::---");
+
+        return students;
+    }
+
 
 }
